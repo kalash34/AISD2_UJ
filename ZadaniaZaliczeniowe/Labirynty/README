@@ -1,0 +1,35 @@
+Projekt Zawiera 3 pliki :
+
+1. Labirynty.ipynb
+2. Generator.py
+3. Main.py
+
+Rozwiazaniem zadania sa dwa pliki Main.py oraz Generator.py .
+
+1.
+
+W notatniku Labirynty.ipynb znajduje sie opis zagadnienia 
+Generowania Labiryntow jako Drzew Losowych. 
+
+Rozwazamy rozne sposoby wyjmowania elementow ze struktury, w ktorej
+przechowywane sa wezly. 
+W zaleznosci od tego ( uzycie metody pop()) - otrzymujemy algorytm
+zachowujacy sie podobnie jak BFS , DFS, albo cos pomiedzy (mieszane uzycie).
+
+2.
+
+Program Generator.py wykorzystuje uproszczona metode ( pop() random ),
+na potrzeby programu generuje obrazek labiryntu, ktory jest wczytywany w osobnym pliku.
+
+
+3.
+
+Program Main.py zawiera proste okienko w bibliotece Tkinter, klase
+implementujaca graf, ktory reprezentuje labirynt wczytywany z obrazka,
+implementacje algorytmow znajdujacych rozwiazanie w labiryncie.
+
+
+Uruchomienie:
+    Zeby przegladac i rozwiazac wybrany labirynt, nalezy najpierw
+    wygenerowac obrazek w Generator.py a nastepnie uruchomic oddzielnie
+    Main.py.
