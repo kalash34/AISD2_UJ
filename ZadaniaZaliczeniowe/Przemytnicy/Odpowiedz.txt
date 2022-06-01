@@ -1,0 +1,153 @@
+W pliku rozwiazanie sa moje proby odpowiedzenia na pytanie z polecenia.
+Tutaj jest odpowiedz co jest wazne w calym programie poza reszta kodu ktory sluzyl mi do testow grafu wejsciowego.
+---------------------------------------------------------------------
+
+
+Najblizsze Odpowiedzi udalo mi sie uzyskac dla Algorytmu Dijkstry oraz Floyda-Warshalla.
+
+Wyjsciowa Wartosc Zinterpretowalem jako: 
+	clo = najtanszy_metal / 2
+	+ Waga Najtanszego Cyklu Przechodzacego Przez Wierzcholki
+
+
+Aby Znalezc Najtansze Cykle W Naszym Grafie Algorytmem Floyda mozna zastosowac podejscie( analogicznie dla Dijkstry
+w ktorym tez stosujemy edge relaxation):
+
+Przechodzimy wszystkie pary uporzadkowane (u, v) i znajdujemy pare ktora minimalizuje dist(u, v) + dist(v, u) ,
+ta para wskazuje istnienie cyklu z u do v o wadze= dist(u,v) + dist(v,u).
+
+Jesli graf pozwalalby na petle dla pojedynczych wierzcholkow (u, u), musielibysmy
+sprawdzac je oddzielnie, poniewaz tylko takie cykle nie sa sprawdzane przez algorytm.
+(W tresci zadania nic na to nie wskazuje).
+
+
+Dla Algorytmu Floyda Warshalla Mozna Zastosowac Podejscie:
+--------------------------------------------------------
+
+1.     Uruchom Floyd Warshall na naszym grafie
+
+2.	min <- infinity
+	vertex <- None
+	for each pair of vertices u,v
+    		if (dist(u,v) + dist(v,u) < min):
+           		min <- dist(u,v) + dist(v,u)
+           		pair <- (u,v)
+	return path(u,v) + path(v,u)
+
+3. path(u,v) + path(v,u) to najkrotsza sciezka z u do v, a potem z v do u, temu jest cyklem.
+
+
+---
+Do naszego Wyniku Dodajemy Clo= najtanszy_metal / 2
+
+-------------------------------------------------------------------------
+
+TESTY Floyda Warshalla NA PROBNYCH DANYCH:
+
+Koszty Wszystkich Wczytanych Przemian =
+10 5 25 10 5 50
+
+Obliczone Clo Dla Ladunku[bajto_dolarow] =  1
+
+Najkrotsza Sciezka z Miedzy Wierzcholkami : 0 = > 1 to [0, 1]
+Koszt Cyklu Dla Pary <u,v>=35
+Najkrotsza Sciezka z Miedzy Wierzcholkami : 0 = > 2 to [0, 2]
+Koszt Cyklu Dla Pary <u,v>=40
+Najkrotsza Sciezka z Miedzy Wierzcholkami : 0 = > 3 to [0, 2, 3]
+Koszt Cyklu Dla Pary <u,v>=60
+Najkrotsza Sciezka z Miedzy Wierzcholkami : 1 = > 0 to [1, 0]
+Koszt Cyklu Dla Pary <u,v>=35
+Najkrotsza Sciezka z Miedzy Wierzcholkami : 1 = > 2 to [1, 0, 2]
+Koszt Cyklu Dla Pary <u,v>=40
+Najkrotsza Sciezka z Miedzy Wierzcholkami : 1 = > 3 to [1, 0, 2, 3]
+Koszt Cyklu Dla Pary <u,v>=95
+Najkrotsza Sciezka z Miedzy Wierzcholkami : 2 = > 0 to [2, 1, 0]
+Koszt Cyklu Dla Pary <u,v>=40
+Najkrotsza Sciezka z Miedzy Wierzcholkami : 2 = > 1 to [2, 1]
+Koszt Cyklu Dla Pary <u,v>=40
+Najkrotsza Sciezka z Miedzy Wierzcholkami : 2 = > 3 to [2, 3]
+Koszt Cyklu Dla Pary <u,v>=60
+Najkrotsza Sciezka z Miedzy Wierzcholkami : 3 = > 0 to [3, 0]
+Koszt Cyklu Dla Pary <u,v>=60
+Najkrotsza Sciezka z Miedzy Wierzcholkami : 3 = > 1 to [3, 0, 1]
+Koszt Cyklu Dla Pary <u,v>=95
+Najkrotsza Sciezka z Miedzy Wierzcholkami : 3 = > 2 to [3, 0, 2]
+Koszt Cyklu Dla Pary <u,v>=60
+
+
+--------------------------------------------------
+Obserwacja:
+
+Na podstawie Danych Wejsciowych Mozemy Zaobserwowac Wagi Cykli Otrzymanych w wyniku sumowania par wag zwroconych przez Algorytm Floyda Warshalla.
+Widzimy, ze musimy brac pod uwage Cykle zaczynajace sie od zera. (Tak tez wynika z polecenia).
+
+W Zadaniu napisane jest ze mamy otrzymac 60. Jest to waga cyklu [0, 2, 3], ale do tej wartosci trzeba dodac wartosc cla.
+Stad Ja szukam jedynie najtanszego cyklu - nie wiem jak to interpretowac zeby dostac wartosc 60 z wartoscia cla wlacznie.
+
+Najkrotsza Sciezka z Miedzy Wierzcholkami : 0 = > 3 to [0, 2, 3]
+Koszt Cyklu Dla Pary <u,v>=60
+
+- Jednak Macierz Sciezek Wygenerowana przez procedure bierze pod uwage sciezki o zerowej dlugosci:
+
+Musimy Dodac Warunek:
+
+ if(path[v].size()>0){
+ 	cycle_cost=cost[v][u]+cost[u][v];
+ }
+
+
+------------------------------------
+
+
+I Dostajemy taka Funkcje:
+
+int FloydWarshallSolution(vector<vector<int>> const &cost, vector<vector<int>> const &path, int start){
+    int n = cost.size();
+    bool flaga=false;
+    int cycle_cost=0;
+    int minimalny_cykl=0;
+    map<int, int> koszty_cykli; // slownik wartosci cykli wychodzacych z wierzcholkow < indeks, wielkosc_cyklu >
+
+    for (int v = 0; v < n; v++)
+    {
+        for (int u = 0; u < n; u++)
+        {
+            if (u != v && path[v][u] != -1)         // Sprawdzamy Tylko Cykle Zaczynajace Sie Od Zera
+            {
+                if(path[v][u]>0){                   //usuwamy zerowe sciezki
+                cycle_cost=cost[v][u]+cost[u][v];
+                flaga=true;
+                }
+            }if(flaga){
+            std::map<int, int>::iterator it = koszty_cykli.find(v);
+            if (it != koszty_cykli.end()){
+                if( cycle_cost < it-> second){
+                it->second = cycle_cost;
+                }
+            }else{
+                koszty_cykli.insert({ v, cycle_cost });
+            }
+            }
+            flaga=false;
+        }
+    }
+
+    std::map<int, int>::iterator it = koszty_cykli.find(start);
+    if (it != koszty_cykli.end()){
+        minimalny_cykl= it->second;
+    }else{                                          // Kod Bledu
+        minimalny_cykl= -1;
+     }
+     return minimalny_cykl;
+
+}
+
+
+
+
+
+
+
+
+
+
