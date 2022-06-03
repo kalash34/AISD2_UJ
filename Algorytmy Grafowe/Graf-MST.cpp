@@ -45,23 +45,43 @@ class DSU{
 };
 
 class Graph {
-    vector< vector<int> > adjList;
+    vector< pair<int, int> > adjList;
     int V;
 public:
-    Graph(int V){ 
+    Graph(int V){
         this->V = V;
     }
     void addEdge(int u, int v, int wt){
-        adjList.push_back( {u, v, wt} );
+
+        adjList[u].push_back(make_pair(v, wt));
+        printf("Dodano krawedz (%d, %d, %d).\n",u, v, wt);
     }
+
+    void printAdjList(){
+        vector< pair < int, int> > :: iterator it;
+
+        for(int i=0;i<V;i++){
+            for(it=adjList[i].begin();it!=adjList[i].end();it++){
+                cout<<"("<<i<<")---("<<it->first<<"|"<<it->second<<") "<<endl;
+            }
+            cout<<endl;
+        }
+
+
+
+    }
+
+
 
     void Kruskal(){
         sort(adjList.begin(), adjList.end());
+        cout<<"Posortowano Liste!: "<<endl;
+
 
         DSU s(V);
         int ans = 0;
 
-        cout<<" Nastepujace Krawedzie Tworza MST "<<endl;
+        cout<<" Nastepujace Krawedzie Tworza MST: "<<endl;
 
         for(auto edge : adjList){
            int u = edge[0];
@@ -78,7 +98,7 @@ public:
         cout << "Waga MST: " << ans;
 
     }
-    
+
 };
 
 
@@ -111,7 +131,6 @@ int main(){
     g.addEdge(0, 3, 5);
 
     g.Kruskal();
-
 
 
 
