@@ -1,1 +1,0 @@
-Rozwiazanie Zadania z Pracowni.
